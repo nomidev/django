@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 # Create your models here.
 
-
 class Master(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
