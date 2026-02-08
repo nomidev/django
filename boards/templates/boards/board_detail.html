@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+    <p>마스터: {{ post.master.name }} | 작성자: {{ post.author }} | 작성일: {{ post.created_at }}</p>
+    <div>
+        {{ post.content|linebreaks }}
+    </div>
+
+    <h3>댓글</h3>
+    <ul>
+        {% for comment in comments %}
+        <li>{{ comment.author }}: {{ comment.content }} ({{ comment.created_at }})</li>
+        {% empty %}
+        <li>댓글이 없습니다.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'boards:board_list_filter' post.master.slug %}">목록으로 돌아가기</a></p>
+</body>
+</html>

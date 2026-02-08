@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('blog/', include('blog.urls')),
+    path('boards/', include('boards.urls')),
     # path('feedback/', include('feedback.urls')),
 ]

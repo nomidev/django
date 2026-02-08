@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Boards - 목록</title>
+</head>
+<body>
+    <h1>활성 마스터</h1>
+    <ul>
+        
+        {% for master in masters %}
+        <li>
+            <a href="{% url 'boards:board_list_filter' master.slug %}" {% if selected_master.id == master.id %}style="font-weight: bold"{% endif %}>
+                {{ master.name }}
+            </a>
+        </li>
+        {% empty %}
+        <li>활성화된 마스터가 없습니다.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>{% if selected_master %}{{ selected_master.name }} - {% endif %}게시물</h2>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <a href="{% url 'boards:board_detail' post.master.slug post.pk %}">{{ post.title }}</a>
+            - 작성자: {{ post.author }} ({{ post.created_at }})
+        </li>
+        {% empty %}
+        <li>게시물이 없습니다.</li>
+        {% endfor %}
+    </ul>
+    {% if selected_master %}
+    <p><a href="{% url 'boards:board_write' selected_master.slug %}">새 게시물 작성</a></p>
+    {% endif %}
+</body>
+</html>
