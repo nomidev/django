@@ -1,37 +1,86 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Boards - 목록</title>
-</head>
-<body>
-    <h1>활성 마스터</h1>
-    <ul>
-        
-        {% for master in masters %}
-        <li>
-            <a href="{% url 'boards:board_list_filter' master.slug %}" {% if selected_master.id == master.id %}style="font-weight: bold"{% endif %}>
-                {{ master.name }}
-            </a>
-        </li>
-        {% empty %}
-        <li>활성화된 마스터가 없습니다.</li>
-        {% endfor %}
-    </ul>
-
+{% extends 'base.html' %}
+{% block content %}
+    
+<div class="container my-3">
     <h2>{% if selected_master %}{{ selected_master.name }} - {% endif %}게시물</h2>
-    <ul>
+
+    <table class="table">
+        <thead>
+        <tr class="table-dark">
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성일시</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for post in posts %}
-        <li>
-            <a href="{% url 'boards:board_detail' post.master.slug post.pk %}">{{ post.title }}</a>
-            - 작성자: {{ post.author }} ({{ post.created_at }})
-        </li>
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <a href="{% url 'boards:board_detail' post.master.slug post.pk %}">{{ post.title }}</a>
+            </td>
+            <td>{{ post.author }}</td>
+            <td>{{ post.created_at }}</td>
+        </tr>
         {% empty %}
-        <li>게시물이 없습니다.</li>
+        <tr>
+            <td colspan="4">질문이 없습니다.</td>
+        </tr>
         {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 페이징처리 시작 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전페이지 -->
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">처음</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        <!-- 페이지리스트 -->
+        {% for page_number in posts.paginator.page_range %}
+        {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:5 %}
+        {% if page_number == posts.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number }}">다음</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.paginator.num_pages }}">마지막</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
     </ul>
+    <!-- 페이징처리 끝 -->
+    
     {% if selected_master %}
-    <p><a href="{% url 'boards:board_write' selected_master.slug %}">새 게시물 작성</a></p>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <a class="btn btn-primary" href="{% url 'boards:board_write' selected_master.slug %}">새 게시물 작성</a>
+    </div>
     {% endif %}
-</body>
-</html>
+</div>
+    
+{% endblock %}

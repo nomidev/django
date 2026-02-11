@@ -1,24 +1,35 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>{{ post.title }}</title>
-</head>
-<body>
-    <h1>{{ post.title }}</h1>
-    <p>마스터: {{ post.master.name }} | 작성자: {{ post.author }} | 작성일: {{ post.created_at }}</p>
-    <div>
-        {{ post.content|linebreaks }}
-    </div>
+{% extends 'base.html' %}
+{% block content %}
 
-    <h3>댓글</h3>
-    <ul>
-        {% for comment in comments %}
-        <li>{{ comment.author }}: {{ comment.content }} ({{ comment.created_at }})</li>
-        {% empty %}
-        <li>댓글이 없습니다.</li>
-        {% endfor %}
-    </ul>
-    <p><a href="{% url 'boards:board_list_filter' post.master.slug %}">목록으로 돌아가기</a></p>
-</body>
-</html>
+<h2>{{ post.title }}</h2>
+<p>마스터: {{ post.master.name }} | 작성자: {{ post.author }} | 작성일: {{ post.created_at }}</p>
+<div>
+    {{ post.content|linebreaks }}
+</div>
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{% url 'boards:board_list_filter' post.master.slug %}" class="btn btn-primary">목록</a>
+    {% if user.is_authenticated and user == post.author %}
+    <a href="{% url 'boards:board_edit' post.master.slug post.pk %}" class="btn btn-secondary">수정</a>
+    <a href="{% url 'boards:board_delete' post.master.slug post.pk %}" class="btn btn-danger">삭제</a>
+    {% endif %}
+</div>
+
+{% if master.is_commented %}
+<form method="post">
+    {% csrf_token %}
+    {{ commentForm.as_p }}
+    <button type="submit">댓글 등록</button>
+</form>
+
+<h3>댓글</h3>
+<ul>
+    {% for comment in comments %}
+    <li>{{ comment.author }}: {{ comment.content }} ({{ comment.created_at }})</li>
+    {% empty %}
+    <li>댓글이 없습니다.</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

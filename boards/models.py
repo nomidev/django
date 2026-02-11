@@ -7,6 +7,7 @@ class Master(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField()
     is_active = models.BooleanField(default=True)
+    is_commented = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
