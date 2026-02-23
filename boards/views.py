@@ -14,18 +14,20 @@ def board_list(request, master_slug=None):
     selected_master = None
 
     page = request.GET.get('page', 1)
-    
+
+    print("page", page)
+        
     if master_slug:
         selected_master = get_object_or_404(Master, slug=master_slug, is_active=True)
         posts = Post.objects.filter(master=selected_master).select_related('author', 'master').order_by('-created_at')
         paginator = Paginator(posts, 10)  # 페이지당 10개 게시물
-        page_post = paginator.get_page(page)
+        page_obj = paginator.get_page(page)
     else:
         # 모든 활성 마스터의 게시물
         posts = Post.objects.select_related('author', 'master').order_by('-created_at')[:20]
     
     return render(request, 'boards/board_list.html', {
-        'posts': page_post,
+        'posts': page_obj,
         'masters': masters,
         'selected_master': selected_master,
     })
@@ -35,8 +37,8 @@ def board_detail(request, master_slug, pk):
     # 마스터 슬러그로부터 마스터 객체 조회
     master = get_object_or_404(Master, slug=master_slug, is_active=True)
 
-    str1 = request.GET.get('master')
-    print("master:", str1)
+    page = request.GET.get('page')
+    print("page", page)
 
     # 상세 보기 예시: 게시물과 해당 댓글들 조회
     post = get_object_or_404(Post.objects.select_related('author', 'master'), pk=pk, master=master)

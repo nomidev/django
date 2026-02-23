@@ -9,19 +9,21 @@
         <tr class="table-dark">
             <th>번호</th>
             <th>제목</th>
-            <th>작성일시</th>
             <th>작성자</th>
+            <th>작성일시</th>
         </tr>
         </thead>
         <tbody>
         {% for post in posts %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <!-- <td>{{ forloop.counter }}</td> -->
+            <!-- <td>{{ posts.paginator.count|add:posts.start_index|add:forloop.counter0|add:-1 }}</td> -->
+            <td>{{ post.pk }}</td>
             <td>
-                <a href="{% url 'boards:board_detail' post.master.slug post.pk %}">{{ post.title }}</a>
+                <a href="{% url 'boards:board_detail' post.master.slug post.pk %}?page={{ posts.number }}">{{ post.title }}</a>
             </td>
             <td>{{ post.author }}</td>
-            <td>{{ post.created_at }}</td>
+            <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
         </tr>
         {% empty %}
         <tr>
@@ -31,47 +33,49 @@
         </tbody>
     </table>
 
+    {{posts.paginator.num_pages}} 페이지 중 {{posts.number}} 페이지입니다.
+
     <!-- 페이징처리 시작 -->
     <ul class="pagination justify-content-center">
         <!-- 이전페이지 -->
         {% if posts.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1">처음</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ posts.previous_page_number }}">이전</a>
-        </li>
+            <li class="page-item">
+                <a class="page-link" href="?page=1">처음</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">이전</a>
+            </li>
         {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
-        </li>
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
         {% endif %}
         <!-- 페이지리스트 -->
         {% for page_number in posts.paginator.page_range %}
-        {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:5 %}
-        {% if page_number == posts.number %}
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-        </li>
-        {% endif %}
-        {% endif %}
+            {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:4 %}
+                {% if page_number == posts.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% endif %}
+            {% endif %}
         {% endfor %}
         <!-- 다음페이지 -->
         {% if posts.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ posts.next_page_number }}">다음</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ posts.paginator.num_pages }}">마지막</a>
-        </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.next_page_number }}">다음</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ posts.paginator.num_pages }}">마지막</a>
+            </li>
         {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
-        </li>
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
         {% endif %}
     </ul>
     <!-- 페이징처리 끝 -->

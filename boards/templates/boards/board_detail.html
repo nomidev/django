@@ -8,7 +8,7 @@
 </div>
 
 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <a href="{% url 'boards:board_list_filter' post.master.slug %}" class="btn btn-primary">목록</a>
+    <a href="{% url 'boards:board_list_filter' post.master.slug %}?page={{ request.GET.page }}" class="btn btn-primary">목록</a>
     {% if user.is_authenticated and user == post.author %}
     <a href="{% url 'boards:board_edit' post.master.slug post.pk %}" class="btn btn-secondary">수정</a>
     <a href="{% url 'boards:board_delete' post.master.slug post.pk %}" class="btn btn-danger">삭제</a>

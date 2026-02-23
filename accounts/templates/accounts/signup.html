@@ -1,10 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>회원가입</h1>
+<h2>회원가입</h2>
 <form method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">User Name</label>
+        <input type="text" class="form-control" id="username" placeholder="name@example.com">
+    </div>
+    <div class="mb-3">
+        <label for="password1" class="form-label">비밀번호</label>
+        <input type="password" class="form-control" id="password1" placeholder="Password">
+    </div>
+    <div class="mb-3">
+        <label for="password1" class="form-label">비밀번호 확인</label>
+        <input type="password" class="form-control" id="password1" placeholder="Password">
+    </div>
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.as_div }}
     <button type="submit">Sign Up</button>
 </form>
 
