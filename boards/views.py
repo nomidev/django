@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 
 from .models import Master, Post, Comment
 from .forms import PostForm, CommentForm
+import math
 
 
 # Create your views here.
@@ -16,7 +17,8 @@ def board_list(request, master_slug=None):
     page = request.GET.get('page', 1)
     per_page = 10 # 페이지당 10개 게시물
 
-    print("page", page)
+    if page is None or not str(page).isdigit() or int(page) < 1:
+        page = 1
         
     if master_slug:
         selected_master = get_object_or_404(Master, slug=master_slug, is_active=True)
@@ -26,14 +28,26 @@ def board_list(request, master_slug=None):
         
         # 10개 단위 페이징 범위 계산
         current_page = int(page)
+
+        if current_page > paginator.num_pages:
+            current_page = paginator.num_pages
+
         start_index = ((current_page - 1) // per_page) * per_page + 1
         end_index = start_index + per_page
+        block = math.ceil(current_page / per_page)
+        end_index2 = (block * per_page) + 1
+        start_index2 = (end_index2 - per_page)
 
         print("current_page", current_page)
         print("start_index", start_index)
         print("end_index", end_index)
+        print("block", block)
+        print("start_index2", start_index2)
+        print("end_index2", end_index2)
+        print("paginator.num_pages", paginator.num_pages)
         
         # 실제 전체 페이지 수를 넘지 않도록 제한
+        # paginator.num_pages는 마지막 페이지를 반환한다.
         if end_index > paginator.num_pages:
             end_index = paginator.num_pages + 1
             
