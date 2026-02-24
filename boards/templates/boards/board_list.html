@@ -3,7 +3,7 @@
     
 <div class="container my-3">
     <h2>{% if selected_master %}{{ selected_master.name }} - {% endif %}게시물</h2>
-
+    <p class="text-end text-body-secondary">{{ posts.paginator.count }}개의 게시물 / {{posts.paginator.num_pages}} 페이지 중 {{posts.number}} 페이지입니다.</p>
     <table class="table">
         <thead>
         <tr class="table-dark">
@@ -33,7 +33,9 @@
         </tbody>
     </table>
 
-    {{posts.paginator.num_pages}} 페이지 중 {{posts.number}} 페이지입니다.
+    {{posts.start_index}}
+    {{posts.end_index}}
+    {{posts.paginator.per_page}}
 
     <!-- 페이징처리 시작 -->
     <ul class="pagination justify-content-center">
@@ -51,8 +53,8 @@
             </li>
         {% endif %}
         <!-- 페이지리스트 -->
-        {% for page_number in posts.paginator.page_range %}
-            {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:4 %}
+        {% for page_number in page_range %}
+            <!-- {% if page_number >= posts.number|add:-5 and page_number <= posts.number|add:4 %}
                 {% if page_number == posts.number %}
                 <li class="page-item active" aria-current="page">
                     <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
@@ -62,7 +64,16 @@
                     <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
                 </li>
                 {% endif %}
-            {% endif %}
+            {% endif %} -->
+            {% if page_number == posts.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% endif %}
         {% endfor %}
         <!-- 다음페이지 -->
         {% if posts.has_next %}

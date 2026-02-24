@@ -14,20 +14,40 @@ def board_list(request, master_slug=None):
     selected_master = None
 
     page = request.GET.get('page', 1)
+    per_page = 10 # 페이지당 10개 게시물
 
     print("page", page)
         
     if master_slug:
         selected_master = get_object_or_404(Master, slug=master_slug, is_active=True)
         posts = Post.objects.filter(master=selected_master).select_related('author', 'master').order_by('-created_at')
-        paginator = Paginator(posts, 10)  # 페이지당 10개 게시물
+        paginator = Paginator(posts, per_page)  # 페이지당 10개 게시물
         page_obj = paginator.get_page(page)
+        
+        # 10개 단위 페이징 범위 계산
+        current_page = int(page)
+        start_index = ((current_page - 1) // per_page) * per_page + 1
+        end_index = start_index + per_page
+
+        print("current_page", current_page)
+        print("start_index", start_index)
+        print("end_index", end_index)
+        
+        # 실제 전체 페이지 수를 넘지 않도록 제한
+        if end_index > paginator.num_pages:
+            end_index = paginator.num_pages + 1
+            
+        page_range = range(start_index, end_index)
+
+        print("page_range", page_range)
+        
     else:
         # 모든 활성 마스터의 게시물
         posts = Post.objects.select_related('author', 'master').order_by('-created_at')[:20]
     
     return render(request, 'boards/board_list.html', {
         'posts': page_obj,
+        'page_range': page_range,
         'masters': masters,
         'selected_master': selected_master,
     })
