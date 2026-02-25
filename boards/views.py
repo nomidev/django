@@ -7,7 +7,6 @@ from .models import Master, Post, Comment
 from .forms import PostForm, CommentForm
 import math
 
-
 # Create your views here.
 def board_list(request, master_slug=None):
     # 마스터 slug에 따라 게시물 필터링
