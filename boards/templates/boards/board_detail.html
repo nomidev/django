@@ -18,16 +18,27 @@
 {% if master.is_commented %}
 <form method="post">
     {% csrf_token %}
-    {{ commentForm.as_p }}
-    <button type="submit">댓글 등록</button>
+    <!-- {{ commentForm.as_p }} -->
+    <div class="mb-3">
+        <label for="id_content" class="form-label">Content:</label>
+        <textarea class="form-control" name="content" cols="40" rows="4" required="" id="id_content"></textarea>
+    </div>
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary">댓글 등록</button>
+    </div>
 </form>
 
 <h3>댓글</h3>
-<ul>
     {% for comment in comments %}
-    <li>{{ comment.author }}: {{ comment.content }} ({{ comment.created_at }})</li>
+    <div class="text-body-secondary pt-3"> 
+        <p class="pb-3 mb-0 small lh-sm border-bottom">
+            <strong class="d-block text-gray-dark mb-1">@{{ comment.author }}</strong>
+            {{ comment.content }}
+            <small class="d-block text-muted mt-1">{{ comment.created_at }}</small>
+        </p> 
+    </div>
     {% empty %}
-    <li>댓글이 없습니다.</li>
+    <p class="list-group-item">댓글이 없습니다.</p>
     {% endfor %}
 </ul>
 {% endif %}
