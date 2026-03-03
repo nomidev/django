@@ -52,7 +52,11 @@
                         <ul class="dropdown-menu text-small">
                             <li><a class="dropdown-item" href="#">New project...</a></li>
                             <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">{{request.user}}</a></li>
+                            {% if request.user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href= "#">{{request.user}}</a></li>
+                            {% endif %}
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
