@@ -75,7 +75,7 @@ def board_detail(request, master_slug, pk):
 
     # 상세 보기 예시: 게시물과 해당 댓글들 조회
     post = get_object_or_404(Post.objects.select_related('author', 'master'), pk=pk, master=master)
-    comments = post.comments.select_related('author').all()
+    comments = post.comments.select_related('author').all().order_by('created_at')
 
     if request.method == 'POST':
         commentForm = CommentForm(request.POST)

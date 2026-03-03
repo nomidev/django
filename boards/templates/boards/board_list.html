@@ -21,6 +21,13 @@
             <td>{{ post.pk }}</td>
             <td>
                 <a href="{% url 'boards:board_detail' post.master.slug post.pk %}?page={{ posts.number }}">{{ post.title }}</a>
+                    <!-- 
+                        모델에 related_name으로 comments를 지정했으므로 post.comments로 해당 게시물의 댓글들을 참조할 수 있습니다. 
+                        related_name을 지정하지 않았다면 post.comment_set으로 참조해야 합니다.
+                    -->
+                    {% if post.comments.count > 0 %}
+                        <span class="badge bg-secondary">{{ post.comments.count }}</span>
+                    {% endif %}
             </td>
             <td>{{ post.author }}</td>
             <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
