@@ -17,6 +17,22 @@
                     docs &raquo;</a>
             </p>
         </div>
+
+
+        {% for category in categories %}
+            <h2>{{ category.name }} ({{ category.slug }})</h2>
+            <ul>
+                {% comment %} slice:":5"를 통해 최신 5개만 반복합니다 {% endcomment %}
+                {% for post in category.recent_posts|slice:":5" %}
+                    <li>
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        <span>{{ post.created_at|date:"Y-m-d" }}</span>
+                    </li>
+                {% empty %}
+                    <li>게시물이 없습니다.</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
     </div>
 </div>
 
