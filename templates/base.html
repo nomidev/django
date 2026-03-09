@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/navbar/navbars.css' %}">
     <!-- <script src="{% static 'js/bootstrap.min.js' %}"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <title>Document</title>
+    <title>{% block title %}Default Title{% endblock %}</title>
 </head>
 
 <body>
@@ -23,11 +23,11 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    {% for master in masters %}
+                    {% for menu in menus %}
                     <li>
-                        <a href="{% url 'boards:board_list_filter' master.slug %}"
-                            class="nav-link px-2 {% if selected_master.id == master.id %}text-secondary{% else %}text-dark{% endif %}">
-                            {{ master.name }}
+                        <a href="{{ menu.menu_url }}"
+                            class="nav-link px-2 {% if selected_master.slug == menu.menu_name %}text-secondary{% else %}text-dark{% endif %}">
+                            {{ menu.menu_name }}
                         </a>
                     </li>
                     {% empty %}
@@ -85,7 +85,7 @@
         </main>
 
         <footer class="py-3 my-4 border-top">
-            <p class="text-center text-body-secondary">© {% now "Y" %} Lgdisplay, Inc</p>
+            <p class="text-center text-body-secondary">© {% now "Y" %} LG Display, Inc</p>
         </footer>
     </div>
 

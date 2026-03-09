@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'home',
     'accounts',
     'boards',
+    'category',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'category.context_processors.menu_context',  # 메뉴 컨텍스트 프로세서 추가
             ],
         },
     },

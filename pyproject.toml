@@ -1,7 +1,11 @@
 [project]
-name = "django"
+name = "django-app"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "django>=6.0.3",
+    "faker>=40.8.0",
+    "pymysql>=1.1.2",
+]
