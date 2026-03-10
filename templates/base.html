@@ -25,10 +25,17 @@
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     {% for menu in menus %}
                     <li>
-                        <a href="{{ menu.menu_url }}"
-                            class="nav-link px-2 {% if selected_master.slug == menu.menu_name %}text-secondary{% else %}text-dark{% endif %}">
-                            {{ menu.menu_name }}
+                        {% if menu.url_type.code == 'URL' %}
+                        <a href="{{ menu.url }}"
+                            class="nav-link px-2 {% if selected_name == menu.view_param %}text-primary{% else %}text-dark{% endif %}">
+                            {{ menu.name }}
                         </a>
+                        {% elif menu.url_type.code == 'VIEW' %}
+                        <a href="{% url menu.view menu.view_param %}"
+                            class="nav-link px-2 {% if selected_name == menu.view_param %}text-primary{% else %}text-dark{% endif %}">
+                            {{ menu.name }}
+                        </a>
+                        {% endif %}
                     </li>
                     {% empty %}
                     <li>활성화된 메뉴가 없습니다.</li>
@@ -90,6 +97,11 @@
     </div>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}" class="astro-vvvwv3sm"></script>
+
+    <!-- 자바스크립트 Start -->
+    {% block script %}
+    {% endblock %}
+    <!-- 자바스크립트 End -->
 </body>
 
 </html>

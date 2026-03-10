@@ -61,8 +61,8 @@ def board_list(request, master_slug=None):
     return render(request, 'boards/board_list.html', {
         'posts': page_obj,
         'page_range': page_range,
-        'masters': masters,
         'selected_master': selected_master,
+        'selected_name': selected_master.slug,
     })
 
 
@@ -94,7 +94,13 @@ def board_detail(request, master_slug, pk):
     else:
         commentForm = CommentForm()
     
-    return render(request, 'boards/board_detail.html', {'post': post, 'comments': comments, 'commentForm': commentForm, 'master': master})
+    return render(request, 'boards/board_detail.html', {
+        'post': post, 
+        'comments': comments, 
+        'commentForm': commentForm, 
+        'master': master,
+        'selected_name': master.slug,
+    })
 
 
 @login_required
@@ -114,7 +120,11 @@ def board_write(request, master_slug):
     else:
         form = PostForm()
 
-    return render(request, 'boards/board_form.html', {'form': form, 'master': master})
+    return render(request, 'boards/board_form.html', {
+        'form': form, 
+        'master': master,
+        'selected_name': master.slug
+    })
 
 
 @login_required
@@ -138,7 +148,12 @@ def board_edit(request, master_slug, pk):
     else:
         form = PostForm(instance=post)
 
-    return render(request, 'boards/board_form.html', {'form': form, 'master': master, 'post': post})
+    return render(request, 'boards/board_form.html', {
+        'form': form, 
+        'master': master, 
+        'post': post,
+        'selected_name': master.slug
+    })
 
 """
 @login_required 와 @require_POST 를 같이 쓰게 되면
@@ -148,7 +163,7 @@ redirect(request.GET.get('next')) 을 통해서 GET 방식으로 되돌아가기
 """
 
 # @login_required
-@require_POST
+# @require_POST
 def board_delete(request, master_slug, pk):
     if request.user.is_authenticated :
     # 마스터 슬러그로부터 마스터 객체 조회
@@ -162,3 +177,15 @@ def board_delete(request, master_slug, pk):
             post.delete()
     
     return redirect('boards:board_list_filter', master_slug=master.slug)
+
+@login_required
+def board_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if user in post.likes.all():
+        post.likes.remove(user)
+    else:
+        post.likes.add(user)
+
+    return redirect('boards:board_detail', master_slug=post.master.slug, pk=post.pk)
