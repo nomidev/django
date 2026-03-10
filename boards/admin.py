@@ -12,7 +12,7 @@ class CommentInline(admin.TabularInline): # 혹은 StackedInline
 
 @admin.register(Master)
 class BoardMasterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug', 'is_active') # 목록에 보여줄 필드
+    list_display = ('name', 'slug', 'is_active', 'is_commented') # 목록에 보여줄 필드
     prepopulated_fields = {'slug': ('name',)}    # 이름을 쓰면 슬러그 자동 생성
 
 @admin.register(Post)
