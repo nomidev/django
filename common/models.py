@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class Codetype(models.Model):
+class CodeType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     use_flag = models.BooleanField(default=True)
@@ -15,7 +15,7 @@ class Codetype(models.Model):
         return self.name
     
 class Code(models.Model):
-    code_type = models.ForeignKey(Codetype, related_name='codes', on_delete=models.CASCADE)
+    code_type = models.ForeignKey(CodeType, related_name='codes', on_delete=models.CASCADE)
     code = models.CharField(max_length=100)
     code_name = models.CharField(max_length=200)
     code_description = models.TextField(blank=True)
