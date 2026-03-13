@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.http import require_POST
 import datetime
 from boards.models import Master
+from .forms import SignupForm
 
 # Create your views here.
 def login_view(request):
@@ -36,11 +37,11 @@ def signup_view(request):
 
     # 회원가입 뷰: GET -> 폼 표시, POST -> 저장
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('index')
     else:
-        form = UserCreationForm()
+        form = SignupForm()
     return render(request, 'accounts/signup.html', {'form': form, 'masters': masters,})
