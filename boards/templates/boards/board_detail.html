@@ -38,7 +38,7 @@
     </form>
 {% else %}
     {# 비로그인 사용자에게는 로그인 안내 메시지를 보여줍니다. #}
-    <div class="alert alert-info mt-3" role="alert">
+    <div class="alert alert-light mt-3" role="alert">
         댓글을 작성하려면 <a href="{% url 'accounts:login' %}?next={{ request.path }}">로그인</a>이 필요합니다.
     </div>
 {% endif %}
@@ -52,6 +52,7 @@
             <small class="d-block text-muted mt-1">{{ comment.created_at }}</small>
         </p>
 
+        {% if user.is_authenticated %}
         <p class="d-inline-flex mt-2">
             <a class="btn btn-sm btn-primary" data-bs-toggle="collapse" href="#commentCollapse{{ comment.id }}" role="button" aria-expanded="false" aria-controls="commentCollapse{{ comment.id }}">
                 답글달기
@@ -72,19 +73,6 @@
                     </div>
                 </form>
             </div>
-
-            {% if comment.replies.all %}
-            {% for child in comment.replies.all %}
-                <div class="d-grid">
-                    <p class="pb-3 mb-0 small lh-sm border-bottom">
-                        <strong class="d-block text-gray-dark mb-1">@{{ child.author }}</strong>
-                        {{ child.content }}            
-                        <small class="d-block text-muted mt-1">{{ child.created_at }}</small>
-                    </p>
-                </div>
-            {% endfor %}
-            {% endif %}
-            
             <!-- {% for child in comment.children %}
             <div class="d-grid ps-5">
                 <p class="pb-3 mb-0 small lh-sm border-bottom">
@@ -94,7 +82,22 @@
                 </p>
             </div>
             {% endfor %} -->
-        </div>     
+        </div>
+        {% endif %}
+        
+        {% if comment.replies.all %}
+        <div class="ps-5">
+        {% for child in comment.replies.all %}
+            <div class="d-grid mt-3">
+                <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark mb-1">@{{ child.author }}</strong>
+                    {{ child.content }}            
+                    <small class="d-block text-muted mt-1">{{ child.created_at }}</small>
+                </p>
+            </div>
+        {% endfor %}
+        </div>
+        {% endif %}
     </div>
     {% empty %}
     <p class="list-group-item">댓글이 없습니다.</p>
