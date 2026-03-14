@@ -34,9 +34,9 @@ def board_list(request, master_slug=None):
         # (가장 최신 게시물을 1번으로 삼기 위해 전체 갯수에서 오프셋을 뺍니다.)
         page_start_number = paginator.count - (page_obj.start_index() - 1)
 
-        print("paginator.count", paginator.count)
-        print("page_obj.start_index()", page_obj.start_index())
-        print("page_start_number", page_start_number)
+        print("paginator.count", paginator.count) #300
+        print("page_obj.start_index()", page_obj.start_index()) #1
+        print("page_start_number", page_start_number) #300
 
         # 게시물 번호를 미리 계산해 템플릿에서 수식을 사용하지 않도록 함
         post_numbers = [
