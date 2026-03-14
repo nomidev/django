@@ -15,11 +15,9 @@
         </tr>
         </thead>
         <tbody>
-        {% for post in posts %}
+        {% for post, post_number in post_numbers %}
         <tr>
-            <!-- <td>{{ forloop.counter }}</td> -->
-            <!-- <td>{{ posts.paginator.count|add:posts.start_index|add:forloop.counter0|add:-1 }}</td> -->
-            <td>{{ post.pk }}</td>
+            <td>{{ post_number }}</td>
             <td>
                 <a href="{% url 'boards:board_detail' post.master.slug post.pk %}?page={{ posts.number }}">{{ post.title }}</a>
                     <!-- 

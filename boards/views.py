@@ -16,6 +16,11 @@ def board_list(request, master_slug=None):
     page = request.GET.get('page', 1)
     per_page = 10 # 페이지당 10개 게시물
 
+    # 기본값 설정 (master_slug가 없는 경우에도 안전하게 렌더링되도록)
+    page_obj = None
+    page_range = None
+    page_start_number = None
+
     if page is None or not str(page).isdigit() or int(page) < 1:
         page = 1
         
@@ -24,7 +29,17 @@ def board_list(request, master_slug=None):
         posts = Post.objects.filter(master=selected_master).select_related('author', 'master').order_by('-created_at')
         paginator = Paginator(posts, per_page)  # 페이지당 10개 게시물
         page_obj = paginator.get_page(page)
-        
+
+        # 페이징된 결과를 기반으로, 현재 페이지의 첫 번째 게시물의 번호를 계산
+        # (가장 최신 게시물을 1번으로 삼기 위해 전체 갯수에서 오프셋을 뺍니다.)
+        page_start_number = paginator.count - (page_obj.start_index() - 1)
+
+        # 게시물 번호를 미리 계산해 템플릿에서 수식을 사용하지 않도록 함
+        post_numbers = [
+            (post, page_start_number - idx)
+            for idx, post in enumerate(page_obj.object_list)
+        ]
+
         # 10개 단위 페이징 범위 계산
         current_page = int(page)
 
@@ -57,12 +72,15 @@ def board_list(request, master_slug=None):
     else:
         # 모든 활성 마스터의 게시물
         posts = Post.objects.select_related('author', 'master').order_by('-created_at')[:20]
-    
+        page_obj = posts
+        post_numbers = [(post, idx + 1) for idx, post in enumerate(posts)]
+
     return render(request, 'boards/board_list.html', {
         'posts': page_obj,
+        'post_numbers': post_numbers,
         'page_range': page_range,
         'selected_master': selected_master,
-        'selected_name': selected_master.slug,
+        'selected_name': selected_master.slug if selected_master else None,
     })
 
 
