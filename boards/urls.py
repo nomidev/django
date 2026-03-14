@@ -11,5 +11,6 @@ urlpatterns = [
     path('<slug:master_slug>/<int:pk>/edit/', views.board_edit, name='board_edit'),
     path('<slug:master_slug>/<int:pk>/delete/', views.board_delete, name='board_delete'),
     path('<slug:master_slug>/<int:pk>/', views.board_detail, name='board_detail'),
+    path('<slug:master_slug>/<int:pk>/comment/', views.comment_create, name='comment_create'),
     path('<int:pk>/like/', views.board_like, name='board_like'),
 ]

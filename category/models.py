@@ -1,7 +1,8 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 
 # Create your models here.
-class Menu(models.Model):
+class Menu(MPTTModel):
     name = models.CharField(max_length=100, verbose_name="menu_name")
     description = models.TextField(blank=True, verbose_name="menu_description")
     level = models.IntegerField(default=0, verbose_name="menu_level")
@@ -10,7 +11,7 @@ class Menu(models.Model):
     view = models.CharField(max_length=100, blank=True, verbose_name="menu_view")
     view_param = models.CharField(max_length=100, blank=True, verbose_name="menu_view_param")
     order_no = models.IntegerField(default=0, verbose_name="order_no")
-    parent_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='submenus')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='submenus')
     display_flag = models.BooleanField(default=True, verbose_name="display_flag")
     use_flag = models.BooleanField(default=True, verbose_name="use_flag")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="created_at")

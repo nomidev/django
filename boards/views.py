@@ -76,23 +76,7 @@ def board_detail(request, master_slug, pk):
     # 상세 보기 예시: 게시물과 해당 댓글들 조회
     post = get_object_or_404(Post.objects.select_related('author', 'master'), pk=pk, master=master)
     comments = post.comments.select_related('author').filter(parent=None).order_by('created_at')
-    parent_id = request.POST.get('parent_id')
-
-    if request.method == 'POST':
-        commentForm = CommentForm(request.POST)
-        if commentForm.is_valid():
-            comment = commentForm.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-
-            if parent_id:
-                parent_comment = get_object_or_404(Comment, pk=parent_id)
-                comment.parent = parent_comment
-
-            comment.save()
-            return redirect('boards:board_detail', master_slug=master.slug, pk=post.pk)
-    else:
-        commentForm = CommentForm()
+    commentForm = CommentForm()
     
     return render(request, 'boards/board_detail.html', {
         'post': post, 
@@ -189,3 +173,24 @@ def board_like(request, pk):
         post.likes.add(user)
 
     return redirect('boards:board_detail', master_slug=post.master.slug, pk=post.pk)
+
+@login_required
+@require_POST
+def comment_create(request, master_slug, pk):
+    master = get_object_or_404(Master, slug=master_slug, is_active=True)
+    post = get_object_or_404(Post, pk=pk, master=master)
+    form = CommentForm(request.POST)
+
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.author = request.user
+        parent_id = request.POST.get('parent_id')
+    
+        if parent_id:
+            parent_comment = get_object_or_404(Comment, pk=parent_id)
+            comment.parent = parent_comment
+        comment.save()
+    
+    return redirect('boards:board_detail', master_slug=post.master.slug, pk=post.pk)
+

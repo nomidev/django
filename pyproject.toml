@@ -8,4 +8,5 @@ dependencies = [
     "django>=6.0.3",
     "faker>=40.8.0",
     "pymysql>=1.1.2",
+    "django-mptt>=0.16.0",
 ]
