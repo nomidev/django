@@ -138,4 +138,4 @@ STATICFILES_DIRS = [
 
 SESSION_COOKIE_AGE = 3600 # 세션 만료 시간 (초 단위, 여기서는 1시간)
 SESSION_SAVE_EVERY_REQUEST = True # 요청이 들어올 때마다 세션 만료 시간을 연장
-SESSION_BROWSER_CLOSES = True # 브라우저 종료 시 세션이 만료
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # 브라우저를 닫으면 세션이 만료되도록 설정
