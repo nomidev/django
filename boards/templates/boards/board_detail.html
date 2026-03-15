@@ -119,9 +119,19 @@ Array.from(delete_elements).forEach(function(element) {
 });
 
 const recommend_elements = document.getElementsByClassName("recommend");
+
+const likesFlag = {% if user in post.likes.all %}true{% else %}false{% endif %};
+let message = "";
+
+{% if user in post.likes.all %}
+    message = "이미 추천한 게시물입니다. 추천을 취소하시겠습니까?";
+{% else %}
+    message = "추천하지 않은 사용자입니다. 추천하시겠습니까?";
+{% endif %}
+
 Array.from(recommend_elements).forEach(function(element) {
     element.addEventListener('click', function() {
-        if(confirm("정말로 추천하시겠습니까?")) {
+        if(confirm(message)) {
             location.href = this.dataset.uri;
         };
     });

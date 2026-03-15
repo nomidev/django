@@ -25,7 +25,10 @@
                         related_name을 지정하지 않았다면 post.comment_set으로 참조해야 합니다.
                     -->
                     {% if post.comments.count > 0 %}
-                        <span class="badge bg-secondary">{{ post.comments.count }}</span>
+                        <span class="badge text-bg-danger">{{ post.comments.count }}</span>
+                    {% endif %}
+                    {% if post.likes.count > 0 %}
+                        <span class="badge text-bg-warning">{{ post.likes.count }}</span>
                     {% endif %}
             </td>
             <td>{{ post.author }}</td>
